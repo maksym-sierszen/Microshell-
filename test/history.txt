@@ -1,0 +1,15 @@
+history
+history
+history
+history
+history
+history
+history
+history
+echo dog
+history
+htop
+history
+touch newfile.txt
+history
+cd ..

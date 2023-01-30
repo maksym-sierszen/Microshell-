@@ -1,0 +1,12 @@
+history 
+help
+date
+cd ..
+cd ..
+cd ~ 
+cd Desktop
+cd ~ 
+cd -
+ls -l
+nyjihi
+Mµõ_¡U
