@@ -217,7 +217,7 @@ int main()
 		{
 			funcExecutor(tokens);
 		}
-		
+		for(int i = 0; tokens[i] != NULL; i++) free(tokens[i]); // Zwolnij pamiec dla indywidualnych stringow w tablicy, przed zwolnieniem samej tablicy
 		free(tokens);
 		free(input);
 		
