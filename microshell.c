@@ -7,6 +7,19 @@
 #include <sys/wait.h>
 #include <time.h>
 
+const char* historyFilename = "history.txt";
+char historyPath[256];
+extern const char *__progname;
+// getHistoryPath - zwraca sciezke absolutna do pliku history.txt, implementacja dla linuxa, po zawolaniu trzeba zwolnic pamiec
+char *getHistoryPath(){
+    char *buf = malloc(256);
+    readlink("/proc/self/exe", buf, (256-strlen(historyFilename)));
+    int pos = strlen(buf)-strlen(__progname);
+    buf[pos] = '\0';
+    strcat(buf, historyFilename);
+    return buf;
+}
+
 // displayPath - wyswietla znak zachety w postaci [{path}] $, gdzie {path} jest sciezka do biezacego katalogu roboczego
 char displayPath()
 {
@@ -24,7 +37,7 @@ char displayPath()
 void addHistory(char *input)
 {
 	FILE *file;
-	file = fopen("/home/students/s485950/Desktop/SOP/history.txt", "a");
+	file = fopen(historyPath, "a");
 	fputs(input, file);
 	fclose(file);
 }
@@ -98,6 +111,8 @@ void cdFunc(char **args)
 	}
 }
 
+
+
 // helpFunc - wyswietla informacje o powloce
 void helpFunc()
 {
@@ -122,7 +137,7 @@ void historyFunc(char **args)
 	{
 		if(args[1][1] == 'c') // Sprawdz czy to -c (wyczysc historie)
 		{
-			file = fopen("/home/students/s485950/Desktop/SOP/history.txt", "w"); // Open z paramterem "w" wystarczy do wyczyszczenia pliku
+			file = fopen(historyPath, "w"); // Open z paramterem "w" wystarczy do wyczyszczenia pliku
 			if(file == NULL)	// Jesli blad to komunikat
 			{
 				perror("error occured: history");
@@ -132,7 +147,7 @@ void historyFunc(char **args)
 	}
 	else 
 	{
-		file = fopen("/home/students/s485950/Desktop/SOP/history.txt", "r");	// W przypadku braku flagi otworz z "r" do odczytywania
+		file = fopen(historyPath, "r");	// W przypadku braku flagi otworz z "r" do odczytywania
 		if(file == NULL)	// Jesli blad to komunikat
 		{
 			perror("error occured: history");
@@ -207,6 +222,9 @@ void funcExecutor(char **args)
 
 int main()
 {
+    char *a = getHistoryPath();
+    strcpy(historyPath, a);
+    free(a);
 	while(1)
 	{
 		displayPath();
@@ -217,7 +235,6 @@ int main()
 		{
 			funcExecutor(tokens);
 		}
-		
 		free(tokens);
 		free(input);
 		
